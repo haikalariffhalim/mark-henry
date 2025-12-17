@@ -58,12 +58,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "css-colors"
-version = "1.0.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "22c2bbfc5708f23437b074ba4e699b14fd6d7181a61695bccc8d944b78739236"
-
-[[package]]
 name = "equivalent"
 version = "1.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -640,7 +634,6 @@ checksum = "37c93d8daa9d8a012fd8ab92f088405fb202ea0b6ab73ee2482ae66af4f42091"
 name = "mark-henry"
 version = "0.1.0"
 dependencies = [
- "css-colors",
  "gloo-net 0.6.0",
  "js-sys",
  "pulldown-cmark",
