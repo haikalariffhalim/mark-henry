@@ -10,4 +10,6 @@ src/
 ├── utils.rs         <-- DOM helpers (Observer, Highlighting)
 └── app.rs           <-- The Main Yew Component
 
-### cargo fmt -- --check
+### some really good notes
+
+for web-sys, setter-style methods mutate self and return &mut Self.

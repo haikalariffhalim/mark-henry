@@ -3,12 +3,9 @@ use js_sys::Date;
 use wasm_bindgen::JsCast;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen_futures::spawn_local;
-use web_sys::{
-    HtmlElement, IntersectionObserver, IntersectionObserverEntry, IntersectionObserverInit,
-};
+use web_sys::{IntersectionObserver, IntersectionObserverEntry, IntersectionObserverInit};
 use yew::prelude::*;
 
-// --- IMPORTS FROM YOUR OTHER FILES ---
 use crate::AppConfig; // From lib.rs
 use crate::parser; // From parser.rs
 use crate::types::MenuItem; // From types.rs
@@ -16,19 +13,17 @@ use crate::utils; // From utils.rs
 
 #[function_component(App)]
 pub fn app(props: &AppConfig) -> Html {
-    // 1. STATE
-    // Holds the HTML for the current chapter
+    // STATE: Holds the HTML for the current articles/topics
     let content_data = use_state(|| crate::types::RenderedPage {
         content_html: "<div style='margin-top:20vh; text-align:center'>Select a chapter...</div>"
             .to_string(),
         toc_html: "".to_string(),
     });
-
-    // Holds the list of chapters (The Sidebar)
+    // Holds the list of topics (Sidebar)
     let menu_items = use_state(|| Vec::<MenuItem>::new());
     // Holds mobile menu state
     let is_menu_open = use_state(|| false);
-    // 2. FETCH MENU (Runs once on start)
+    // FETCH MENU (Runs once on start)
     {
         let menu_items = menu_items.clone();
         let user = props.user.clone();
@@ -70,7 +65,6 @@ pub fn app(props: &AppConfig) -> Html {
             let user = user.clone();
             let repo = repo.clone();
             let branch = branch.clone();
-
             // Close mobile menu
             is_menu_open.set(false);
 
@@ -80,7 +74,6 @@ pub fn app(props: &AppConfig) -> Html {
                     content_html: "<div class='loading'>Loading...</div>".to_string(),
                     toc_html: "".to_string(),
                 });
-
                 let url = format!(
                     "https://raw.githubusercontent.com/{}/{}/{}/{}?t={}",
                     user,
@@ -89,26 +82,27 @@ pub fn app(props: &AppConfig) -> Html {
                     path,
                     Date::now()
                 );
-
-                match Request::get(&url).send().await {
+                // nanti check : Rust should know 'resp' is a Response motherfucker
+                // nanti check: "This variable Response or an Error"
+                let fetch_result: Result<gloo::net::http::Response, _> =
+                    Request::get(&url).send().await;
+                match fetch_result {
                     Ok(resp) => {
+                        // nanti check : text() should works (DONE)
                         let text = resp.text().await.unwrap_or_default();
-                        // CALL THE PARSER MODULE HERE
                         let parsed = parser::parse_markdown(&text);
-                        content_data.set(parsed);
+                        content_data.set(crate::parsed_markdown::RenderedPage);
                     }
                     Err(_) => {
-                        content_data.set(crate::types::RenderedPage {
-                            content_html: "<h1>Error</h1><p>Failed to fetch content.</p>"
-                                .to_string(),
-                            toc_html: "".to_string(),
-                        });
+                        content_data.set(crate::types::RenderedPage);
+
+                        //content_html = "<h1>Error</h1><p>Failed to fetch content.</p>".to_string();
+                        //toc_html = "".to_string();
                     }
                 }
             });
         })
     };
-
     // 4. SCROLL SPY (Intersection Observer)
     use_effect_with(content_data.clone(), move |_| {
         let window = web_sys::window().unwrap();
@@ -129,16 +123,16 @@ pub fn app(props: &AppConfig) -> Html {
                     }
                 }
             }
-            // CALL THE UTILS MODULE HERE
+            // check: utils target (DONE)
             utils::highlight_first_active();
         })
             as Box<dyn FnMut(Vec<JsValue>, IntersectionObserver)>);
-
+        // check: mut tak boleh mut self (DONE MOTHERFUCKERRR)
         let mut opts = IntersectionObserverInit::new();
         opts.root_margin("0px 0px -70% 0px");
-
+        //
         if let Ok(observer) =
-            IntersectionObserver::new_with_callback_and_options(cb.as_ref().unchecked_ref(), &opts)
+            IntersectionObserver::new_callback_with_opts(cb, as_ref().unchecked_ref() & opts)
         {
             cb.forget();
 
@@ -150,8 +144,7 @@ pub fn app(props: &AppConfig) -> Html {
         }
         || ()
     });
-
-    // 5. MOBILE MENU TOGGLE
+    // SMOL
     {
         let is_open = *is_menu_open;
         use_effect_with(is_open, move |&open| {
@@ -187,7 +180,7 @@ pub fn app(props: &AppConfig) -> Html {
                     { for menu_items.iter().map(|item| {
                         let path = item.path.clone();
                         let load = load_chapter.clone();
-                        html! { <li onclick={move |_| load.emit(path.clone())}><a href="#">{ &item.title }</a></li> }
+                        html! { <li onclick={ move |_| load.emit(path.clone())}><a href="#">{ &item.title }</a></li> }
                     })}
                     </ul>
                 </div>
