@@ -132,7 +132,7 @@ pub fn app(props: &AppConfig) -> Html {
         opts.root_margin("0px 0px -70% 0px");
         //
         if let Ok(observer) =
-            IntersectionObserver::new_callback_with_opts(cb, as_ref().unchecked_ref() & opts)
+            IntersectionObserver::new_callback_with_opts(cb.as_ref().unchecked_ref(), &opts)
         {
             cb.forget();
 
