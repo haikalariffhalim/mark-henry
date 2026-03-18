@@ -16,7 +16,7 @@ src/
 
 2. This is a closure, sort of a hook in the case where
 
-``` rust
+```rust
    || → a closure that takes no arguments
    () → returns the unit type
 ```
@@ -24,8 +24,10 @@ src/
 
 3. The expected signature (conceptually). 
    
-``` rust
+```rust
+
    FnOnce() -> impl FnOnce()
+
  ```
  
 Meaning:
@@ -40,13 +42,16 @@ When NO cleanup to perform, there are something must be return.
 
 That “something” is:
 
-``` rust
+```rust
+
 || ()
+
 ```
 
 example in the case of hook cases 
 
  ```rust
+
  use_effect(move || {
      let observer = create_observer();
  
@@ -55,25 +60,30 @@ example in the case of hook cases
          observer.disconnect();
      }
  });
+
 ```
 
 ``` rust
+
 use_effect(move || {
     setup_observer();
 
     // no cleanup 
     || ()
 });
+
 ```
 
 Rust will shout error if it doent return. 
 but omit something will cause error as well as it will not return expected types.
 
 ```rust
+
 use_effect(move || {
     //try to omit value from closure 
     setup_observer();
 });
+
 ```
 
 So somehow something must be return which is nothing
