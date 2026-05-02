@@ -6,10 +6,10 @@ use wasm_bindgen_futures::spawn_local;
 use web_sys::{IntersectionObserver, IntersectionObserverEntry, IntersectionObserverInit};
 use yew::prelude::*;
 
-use crate::AppConfig; // From lib.rs
-use crate::parser; // From parser.rs
-use crate::types::MenuItem; // From types.rs
-use crate::utils; // From utils.rs
+use crate::AppConfig;
+use crate::parser;
+use crate::types::MenuItem;
+use crate::utils;
 
 #[function_component(App)]
 pub fn app(props: &AppConfig) -> Html {
@@ -82,7 +82,7 @@ pub fn app(props: &AppConfig) -> Html {
                     path,
                     Date::now()
                 );
-                // nanti check : Rust should know 'resp' is a Response motherfucker
+                // nanti check : Rust should know 'resp'  motherfucker
                 // nanti check: "This variable Response or an Error"
                 let fetch_result: Result<gloo::net::http::Response, _> =
                     Request::get(&url).send().await;

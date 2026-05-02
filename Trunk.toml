@@ -1,7 +1,7 @@
 [build]
 target = "index.html"
 
-# This tells Trunk: "Take everything in /content and put it in the build folder"
+
 [[copy]]
 source = "content"
 target = "content"
