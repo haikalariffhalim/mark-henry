@@ -2,7 +2,7 @@ use serde::Deserialize;
 
 #[derive(Clone, PartialEq, Deserialize)]
 pub struct MenuItem {
-    pub title: String, // Note the 'pub'
+    pub title: String,
     pub path: String,
 }
 

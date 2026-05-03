@@ -1,7 +1,7 @@
 [build]
-target = "index.html"
+target = ["index.html",
 
 
 [[copy]]
-source = "content"
-target = "content"
+source = "doc"
+target = "index.md"

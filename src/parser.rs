@@ -1,16 +1,9 @@
-use pulldown_cmark::{Parser, Options, Event, Tag, TagEnd};
+use pulldown_cmark::{Parser, Options, Event, Tag, End};
 use std::fmt::Write;
-
-// IMPORT FROM TYPES
 use crate::types::RenderedPage;
 
-#[derive(Clone, PartialEq)]
-    pub struct RenderedPage {
-        pub content_html: String,
-        pub toc_html: String,
-    }
 
-    pub fn parse_markdown(markdown_input: &str) -> RenderedPage {
+async fn parse_markdown(markdown_input: &str) -> RenderedPage {
         let mut options = Options::empty();
         options.insert(Options::ENABLE_TABLES);
         options.insert(Options::ENABLE_FOOTNOTES);
@@ -64,7 +57,7 @@ use crate::types::RenderedPage;
                         };
                         // H3, add the last seen H2 text to it
                         let parent_attr = if new_level == 3 && !last_h2_text.is_empty() {
-                            format!(" data-parent-heading='{}'", last_h2_text)
+                            format!("data-parent-heading='{}'", last_h2_text)
                         } else {
                             String::new()
                         };
@@ -88,50 +81,43 @@ use crate::types::RenderedPage;
 
                             i = j;
                         }
-                            Event::End(TagEnd::Heading(_)) => {}
-                                other => {
-                                pulldown_cmark::html::push_html(&mut content_html, std::iter::once(other.clone()));
-                            }
-
-                            i += 1;
-                            }
+	                        while current_level > 0 {
+	                              content_html.push_str("</section>");
+	                              current_level -= 1;
+							      toc_html.push_str("</ul>");
                         }
+                        	i += 1;
+                    }
 
-                        while current_level > 0 {
-                                content_html.push_str("</section>");
-                                current_level -= 1;
-                        };
-                            toc_html.push_str("</ul>");
-                    };
-
-                    RenderedPage { content_html, toc_html };
-
-                            // Intersection Observer (Scroll Spy).Re-run this whenever content changes
-                            use_effect_with(content_data.clone(), move |_| {
-                                let window = web_sys::window().unwrap();
-                                let doc = window.document().unwrap();
-
-                                // Define Observer Logic
-                                let cb = Closure::wrap(Box::new(move |entries: Vec<JsValue>, _| {
-                                    for entry in entries {
-                                        let entry: IntersectionObserverEntry = entry.unchecked_into();
-                                        let target_id = entry.target().get_attribute("id").unwrap_or_default();
-
-                                        // Toggle 'visible' class on the TOC link parent <li>
-                                        let selector = format!("#TableOfContents a[href='#{}']", target_id);
-                                            if let Ok(Some(link)) = doc.query_selector(&selector) {
-                                                let li = link.parent_element().unwrap();
-                                                if entry.intersection_ratio() > 0.0 {
-                                                    let _ = li.class_list().add_1("visible");
-                                                } else {
-                                                    let _ = li.class_list().remove_1("visible");
-                                            }
-
-                                }
+                    Event::End(TagEnd::Heading(_)) => {}
+                            other => {
+                            pulldown_cmark::html::push_html(&mut content_html, std::iter::once(other.clone()));
+                    }
+                    RenderedPage { content_html, toc_html}
+	                        // Intersection Observer (Scroll Spy).Re-run this whenever content changes
+	                 use_effect_with(content_data.clone(), move |_| {
+                        let window = web_sys::window().unwrap();
+                        let doc = window.document().unwrap();
+                        let cb = Closure::wrap(Box::new( move |entries: Vec<JsValue>, _| {
+                        	for entry in entries {
+																																							let entry: IntersectionObserverEntry = entry.unchecked_into();
+							    let target_id = entry.target().get_attribute("id").unwrap_or_default();
+												 																							 		 		    let selector = format!("#TableOfContents a[href='#{}']", target_id);
+																																								if let Ok(Some(link)) = doc.query_selector(&selector) {
+																																		    					    let li = link.parent_element().unwrap();
+							}																						         if entry.intersection_ratio() > 0.0 {
+	                            let _ = li.class_list().add_1("visible");
+	                           } else {
+	                            let _ = li.class_list().remove_1("visible");
+	                           }
                             }
-                }));
+                       	)}
+
+
 
         // Add 'active' class to the first visible element (CSS requirement)
+
+
         highlight_first_active();
         }) as Box<dyn FnMut(Vec<JsValue>, IntersectionObserver)>;
 
@@ -172,7 +158,7 @@ use crate::types::RenderedPage;
         RenderedPage { content_html, toc_html }
     }
 
-    fn highlight_first_active() {
+async fn highlight_first_active() {
         let doc = web_sys::window().unwrap().document().unwrap();
         // Clear active
         let _ = doc.query_selector_all("#TableOfContents li.active").map(|list| {
@@ -186,15 +172,13 @@ use crate::types::RenderedPage;
         };
         // Close remaining sections
         while current_level > 0 {
-            content_html.push_str("</section>");
-            current_level -= 1;
+              content_html.push_str("</section>");
+              current_level -= 1;
         };
 
         toc_html.push_str("</ul>");
     }
 
-    fn some_punctuation(c: char) -> bool {
-
+async fn some_punctuation(c: char) -> bool {
         c == '?' || c == '!' || c == '.' || c == ',' || c == ':'
-
     }
