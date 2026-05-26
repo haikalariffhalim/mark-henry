@@ -3,6 +3,7 @@ use js_sys::Date;
 use wasm_bindgen::JsCast;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen_futures::spawn_local;
+
 use web_sys::{IntersectionObserver, IntersectionObserverEntry, IntersectionObserverInit};
 use yew::prelude::*;
 
@@ -13,17 +14,14 @@ use crate::utils;
 
 #[function_component(App)]
 pub fn app(props: &AppConfig) -> Html {
-    // STATE: Holds the HTML for the current articles/topics
     let content_data = use_state(|| crate::types::RenderedPage {
         content_html: "<div style='margin-top:20vh; text-align:center'>Select a chapter...</div>"
             .to_string(),
         toc_html: "".to_string(),
     });
-    // Holds the list of topics (Sidebar)
     let menu_items = use_state(|| Vec::<MenuItem>::new());
-    // Holds mobile menu state
     let is_menu_open = use_state(|| false);
-    // FETCH MENU (Runs once on start)
+
     {
         let menu_items = menu_items.clone();
         let user = props.user.clone();
@@ -32,7 +30,6 @@ pub fn app(props: &AppConfig) -> Html {
 
         use_effect_with((), move |_| {
             spawn_local(async move {
-                // Construct URL using the Props (Dynamic Config)
                 let url = format!(
                     "https://raw.githubusercontent.com/{}/{}/{}/menu.json?t={}",
                     user,
@@ -40,7 +37,6 @@ pub fn app(props: &AppConfig) -> Html {
                     branch,
                     Date::now()
                 );
-
                 if let Ok(resp) = Request::get(&url).send().await {
                     if let Ok(data) = resp.json::<Vec<MenuItem>>().await {
                         menu_items.set(data);
@@ -50,8 +46,6 @@ pub fn app(props: &AppConfig) -> Html {
             || ()
         });
     }
-
-    // 3. LOAD CHAPTER FUNCTION (Runs when you click a link)
     let load_chapter = {
         let content_data = content_data.clone();
         let is_menu_open = is_menu_open.clone();
@@ -107,7 +101,7 @@ pub fn app(props: &AppConfig) -> Html {
             });
         })
     };
-    // 4. SCROLL SPY (Intersection Observer)
+
     use_effect_with(content_data.clone(), move |_| {
         let window = web_sys::window().unwrap();
         let doc = window.document().unwrap();
@@ -127,18 +121,20 @@ pub fn app(props: &AppConfig) -> Html {
                     }
                 }
             }
-            // check: utils target (DONE)
             utils::highlight_first_active();
         })
             as Box<dyn FnMut(Vec<JsValue>, IntersectionObserver)>);
-        // check: mut tak boleh mut self (DONE MOTHERFUCKERRR)
+
+        // check: mut tak boleh mut self babi ffck,
+
         let mut opts = IntersectionObserverInit::new();
         opts.root_margin("0px 0px -70% 0px");
 
         if let Ok(observer) =
-            IntersectionObserver::new_callback_with_opts(cb.as_ref().unchecked_ref(), &opts)
+            IntersectionObserver::new_with_options(cb.as_ref().unchecked_ref(), &opts)
         {
             cb.forget();
+            
             if let Ok(sections) = doc.query_selector_all("section[id]") {
                 for i in 0..sections.length() {
                     observer.observe(&sections.item(i).unwrap().unchecked_into());
@@ -171,7 +167,6 @@ pub fn app(props: &AppConfig) -> Html {
         Callback::from(move |_| is_menu_open.set(!*is_menu_open))
     };
 
-    // 6. RENDER HTML
     html! {
         <>
             <button id="menu-button" onclick={toggle_menu_cb}>{"Contents"}</button>

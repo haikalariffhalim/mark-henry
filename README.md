@@ -12,7 +12,7 @@ src/
 
 ### some really good notes
 
-1. for web-sys, setter-style methods mutate self and return &mut Self.
+1. for web-sys, set-style methods mutate self and return &mut Self.
 
 2. This is a closure, sort of a hook in the case where
 

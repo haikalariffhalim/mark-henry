@@ -26,12 +26,11 @@ pub fn parse_markdown(markdown_input: &str) -> RenderedPage {
     let mut content_html = String::new();
     let mut toc_html = String::from("<ul>");
 
-    // buffer for non-heading events to be flushed as HTML
     let mut pending: Vec<Event> = Vec::new();
 
     let mut i = 0usize;
     let mut last_h2_text = String::new();
-    let mut h2_open = false; // whether we have an open H2 <section>
+    let mut h2_open = false;
 
     while i < events.len() {
         match &events[i] {
@@ -42,7 +41,6 @@ pub fn parse_markdown(markdown_input: &str) -> RenderedPage {
                     pending = Vec::new();
                 }
 
-                // collect inner text of heading
                 let mut header_text = String::new();
                 let mut j = i + 1;
                 while j < events.len() {
@@ -55,15 +53,14 @@ pub fn parse_markdown(markdown_input: &str) -> RenderedPage {
                 }
 
                 let id = slugify(&header_text);
-                let level_num = *level; // u32
+                let level_num = *level;
 
                 match level_num {
                     h2 => {
-                        // close previous H2 section if open
                         if h2_open {
                             content_html.push_str("</section>");
                         }
-                        // open new section with id
+
                         write!(content_html, "<section id=\'{}\'>", id).unwrap();
                         write!(
                             content_html,
@@ -71,16 +68,13 @@ pub fn parse_markdown(markdown_input: &str) -> RenderedPage {
                             header_text, id
                         )
                         .unwrap();
-                        // record last h2 text for possible H3 parent attribute
                         last_h2_text = header_text.clone();
                         h2_open = true;
 
-                        // add to TOC
                         write!(toc_html, "<li><a href=\'#{}\'>{}</a></li>", id, header_text)
                             .unwrap();
                     }
-                    pulldown_cmark::HeadingLevel::H3 => {
-                        // render H3 as its own section with reference to parent H2
+                    HeadingLevel::H3 => {
                         if !last_h2_text.is_empty() {
                             write!(
                                 content_html,
@@ -100,7 +94,6 @@ pub fn parse_markdown(markdown_input: &str) -> RenderedPage {
                         .unwrap();
                         content_html.push_str("</section>");
 
-                        // add to TOC
                         write!(
                             toc_html,
                             "<li class=\'toc-h3\'><a href=\'#{}\'>{}</a></li>",
@@ -108,15 +101,14 @@ pub fn parse_markdown(markdown_input: &str) -> RenderedPage {
                         )
                         .unwrap();
                     }
-                    pulldown_cmark::HeadingLevel::H4 => {
-                        // For other heading levels, emit a normal heading with id
+                    HeadingLevel::H4 => {
                         write!(
                             content_html,
                             "<h4 id=\'{}\'>{}<a href=\'#{}\' class=\'permalink\'></a></h4>",
                             id, header_text, id
                         )
                         .unwrap();
-                        // include in TOC only for h1-h3? we'll include h1 as top-level
+
                         if level_num == HeadingLevel::H1
                             || level_num == HeadingLevel::H2
                             || level_num == HeadingLevel::H3
@@ -130,9 +122,6 @@ pub fn parse_markdown(markdown_input: &str) -> RenderedPage {
                         }
                     }
                 }
-
-                // advance i to after the End(Heading)
-                // find the matching End
                 let mut k = j;
                 while k < events.len() {
                     if let Event::End(Tag::Heading(_, _, _)) = &events[k] {
@@ -140,28 +129,21 @@ pub fn parse_markdown(markdown_input: &str) -> RenderedPage {
                     }
                     k += 1;
                 }
-                i = k + 1; // continue after the End
+                i = k + 1;
             }
             other => {
-                // buffer non-heading events
                 pending.push(other.clone());
                 i += 1;
             }
         }
     }
-
-    // flush remaining pending
     if !pending.is_empty() {
         pulldown_cmark::html::push_html(&mut content_html, pending.into_iter());
     }
-
-    // close any open H2 section
     if h2_open {
         content_html.push_str("</section>");
     }
-
     toc_html.push_str("</ul>");
-
     RenderedPage {
         content_html,
         toc_html,
