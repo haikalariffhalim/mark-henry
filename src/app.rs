@@ -76,13 +76,10 @@ pub fn app(props: &AppConfig) -> Html {
                     path,
                     Date::now()
                 );
-                // nanti check : Rust should know 'resp'  motherfucker
-                // nanti check: "This variable Response or an Error"
                 let fetch_result: Result<gloo::net::http::Response, _> =
                     Request::get(&url).send().await;
                 match fetch_result {
                     Ok(resp) => {
-                        // nanti check : text() should works (DONE)
                         let text = resp.text().await.unwrap_or_default();
                         let parsed = parse_markdown(&text);
                         content_data.set(crate::types::RenderedPage {
@@ -105,6 +102,7 @@ pub fn app(props: &AppConfig) -> Html {
     use_effect_with(content_data.clone(), move |_| {
         let window = web_sys::window().unwrap();
         let doc = window.document().unwrap();
+        let doc_clone = doc.clone();
 
         let cb = Closure::wrap(Box::new(move |entries: Vec<JsValue>, _| {
             for entry in entries {
@@ -112,7 +110,7 @@ pub fn app(props: &AppConfig) -> Html {
                 let target_id = entry.target().get_attribute("id").unwrap_or_default();
 
                 let selector = format!("#TableOfContents a[href='#{}']", target_id);
-                if let Ok(Some(link)) = doc.query_selector(&selector) {
+                if let Ok(Some(link)) = doc_clone.query_selector(&selector) {
                     let li = link.parent_element().unwrap();
                     if entry.intersection_ratio() > 0.0 {
                         let _ = li.class_list().add_1("visible");
@@ -125,16 +123,14 @@ pub fn app(props: &AppConfig) -> Html {
         })
             as Box<dyn FnMut(Vec<JsValue>, IntersectionObserver)>);
 
-        // check: mut tak boleh mut self babi ffck,
-
-        let mut opts = IntersectionObserverInit::new();
-        opts.root_margin("0px 0px -70% 0px");
+        let opts = IntersectionObserverInit::new();
+        opts.set_root_margin("0px 0px -70% 0px");
 
         if let Ok(observer) =
             IntersectionObserver::new_with_options(cb.as_ref().unchecked_ref(), &opts)
         {
             cb.forget();
-            
+
             if let Ok(sections) = doc.query_selector_all("section[id]") {
                 for i in 0..sections.length() {
                     observer.observe(&sections.item(i).unwrap().unchecked_into());

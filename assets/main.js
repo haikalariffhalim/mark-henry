@@ -10,7 +10,7 @@ export function convertToNestedSections(rootElement) {
 
 	//children.forEach = ReturnType < typeof void null >
 
-	children.forEach((element) => {
+	rootElement.children.forEach((element) => {
 		const headingMatch = element.tagName.match(/^h(\d)$/i);
 
 		if (headingMatch) {
@@ -71,9 +71,9 @@ function highlightFirstActive() {
 		link.classList.remove("active");
 	});
 
-	let firstVisibleLink = document.querySelector("nav li.visible");
+	const firstVisibleLink = document.querySelector("nav li.visible");
 	if (firstVisibleLink) {
-		let firstVisibleChild = firstVisibleLink.querySelector("li.visible");
+		const firstVisibleChild = firstVisibleLink.querySelector("li.visible");
 		if (firstVisibleChild) {
 			firstVisibleChild.classList.add("active");
 		} else {
@@ -99,7 +99,7 @@ function startNavObservation() {
 	});
 
 	// Track all sections that have an `id` applied
-	document.querySelectorAll("section[id]").forEach((aside) => {
+	document.querySelectorAll("section[id]").forEach((section) => {
 		observer.observe(section);
 	});
 }
@@ -107,9 +107,9 @@ function startNavObservation() {
 // Script to hide/show menu
 var button = document.querySelector("#menu-button");
 var menu = document.querySelector("#toc");
-button.addEventListener("click", function (event) {
+button.addEventListener("click", () => {
 	document.body.classList.add("menu-open");
 });
-menu.addEventListener("click", function (event) {
+menu.addEventListener("click", () => {
 	document.body.classList.remove("menu-open");
 });

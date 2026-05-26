@@ -56,39 +56,51 @@ pub fn parse_markdown(markdown_input: &str) -> RenderedPage {
                 let level_num = *level;
 
                 match level_num {
-                    h2 => {
+                    HeadingLevel::H1 => {
+                        // Close any open H2 section before opening H1
+                        if h2_open {
+                            content_html.push_str("</section>");
+                            h2_open = false;
+                        }
+                        write!(
+                            content_html,
+                            "<h1 id='{}'>{}<a href='#{}' class='permalink'></a></h1>",
+                            id, header_text, id
+                        )
+                        .unwrap();
+                        write!(toc_html, "<li><a href='#{}'>{}</a></li>", id, header_text).unwrap();
+                    }
+                    HeadingLevel::H2 => {
                         if h2_open {
                             content_html.push_str("</section>");
                         }
-
-                        write!(content_html, "<section id=\'{}\'>", id).unwrap();
+                        write!(content_html, "<section id='{}'>", id).unwrap();
                         write!(
                             content_html,
-                            "<h2>{}<a href=\'#{}\' class=\'permalink\'></a></h2>",
+                            "<h2>{}<a href='#{}' class='permalink'></a></h2>",
                             header_text, id
                         )
                         .unwrap();
                         last_h2_text = header_text.clone();
                         h2_open = true;
 
-                        write!(toc_html, "<li><a href=\'#{}\'>{}</a></li>", id, header_text)
-                            .unwrap();
+                        write!(toc_html, "<li><a href='#{}'>{}</a></li>", id, header_text).unwrap();
                     }
                     HeadingLevel::H3 => {
                         if !last_h2_text.is_empty() {
                             write!(
                                 content_html,
-                                "<section id=\'{}\' data-parent-heading=\'{}\'>",
+                                "<section id='{}' data-parent-heading='{}'>",
                                 id,
                                 html_escape::encode_double_quoted_attribute(&last_h2_text)
                             )
                             .unwrap();
                         } else {
-                            write!(content_html, "<section id=\'{}\'>", id).unwrap();
+                            write!(content_html, "<section id='{}'>", id).unwrap();
                         }
                         write!(
                             content_html,
-                            "<h3>{}<a href=\'#{}\' class=\'permalink\'></a></h3>",
+                            "<h3>{}<a href='#{}' class='permalink'></a></h3>",
                             header_text, id
                         )
                         .unwrap();
@@ -96,30 +108,25 @@ pub fn parse_markdown(markdown_input: &str) -> RenderedPage {
 
                         write!(
                             toc_html,
-                            "<li class=\'toc-h3\'><a href=\'#{}\'>{}</a></li>",
+                            "<li class='toc-h3'><a href='#{}'>{}</a></li>",
                             id, header_text
                         )
                         .unwrap();
                     }
-                    HeadingLevel::H4 => {
+                    HeadingLevel::H4 | HeadingLevel::H5 | HeadingLevel::H6 => {
+                        let level_str = match level_num {
+                            HeadingLevel::H4 => "4",
+                            HeadingLevel::H5 => "5",
+                            HeadingLevel::H6 => "6",
+                            _ => unreachable!(),
+                        };
                         write!(
                             content_html,
-                            "<h4 id=\'{}\'>{}<a href=\'#{}\' class=\'permalink\'></a></h4>",
-                            id, header_text, id
+                            "<h{} id='{}'>{}<a href='#{}' class='permalink'></a></h{}>",
+                            level_str, id, header_text, id, level_str
                         )
                         .unwrap();
-
-                        if level_num == HeadingLevel::H1
-                            || level_num == HeadingLevel::H2
-                            || level_num == HeadingLevel::H3
-                        {
-                            write!(
-                                toc_html,
-                                "<li class=\'toc-h1\'><a href=\'#{}\'>{}</a></li>",
-                                id, header_text
-                            )
-                            .unwrap();
-                        }
+                        // Don't include H4+ in TOC
                     }
                 }
                 let mut k = j;
