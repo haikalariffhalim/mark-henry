@@ -15,7 +15,7 @@ export default withHtmlLiveReload(
 			const file = Bun.file(path.resolve(filePath));
 			return new Response(file);
 		},
-		error(error) {
+		error(error: Error) {
 			console.error(error);
 			return new Response(null, { status: 404 });
 		},

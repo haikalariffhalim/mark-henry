@@ -5,7 +5,7 @@ import tailwindcss from "tailwindcss";
 import twconfig from "./tailwind.config.ts";
 
 await Bun.build({
-	entrypoints: ["src/index.html"],
+	entrypoints: ["docs/index.md"],
 	outdir: "dist",
 	naming: "[dir]/[name].[ext]",
 	minify: true,

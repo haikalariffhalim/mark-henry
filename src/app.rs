@@ -96,8 +96,8 @@ pub fn app(props: &AppConfig) -> Html {
                     Err(_) => {
                         content_data.set(crate::types::RenderedPage);
 
-                        //content_html = "<h1>Error</h1><p>Failed to fetch content.</p>".to_string();
-                        //toc_html = "".to_string();
+                        content_html = "<h1>Error</h1><p>Failed to fetch content.</p>".to_string();
+                        toc_html = "".to_string();
                     }
                 }
             });
