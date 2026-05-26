@@ -1,5 +1,5 @@
 use crate::types::RenderedPage;
-use pulldown_cmark::{Event, Options, Parser, Tag};
+use pulldown_cmark::{Event, HeadingLevel, Options, Parser, Tag};
 use std::fmt::Write;
 
 /// Convert a header text into a slug suitable for an id attribute
@@ -58,7 +58,7 @@ pub fn parse_markdown(markdown_input: &str) -> RenderedPage {
                 let level_num = *level; // u32
 
                 match level_num {
-                    2 => {
+                    h2 => {
                         // close previous H2 section if open
                         if h2_open {
                             content_html.push_str("</section>");
@@ -79,7 +79,7 @@ pub fn parse_markdown(markdown_input: &str) -> RenderedPage {
                         write!(toc_html, "<li><a href=\'#{}\'>{}</a></li>", id, header_text)
                             .unwrap();
                     }
-                    3 => {
+                    h3 => {
                         // render H3 as its own section with reference to parent H2
                         if !last_h2_text.is_empty() {
                             write!(
@@ -108,16 +108,19 @@ pub fn parse_markdown(markdown_input: &str) -> RenderedPage {
                         )
                         .unwrap();
                     }
-                    _ => {
+                    h4 => {
                         // For other heading levels, emit a normal heading with id
                         write!(
                             content_html,
-                            "<h{} id=\'{}\'>{}<a href=\'#{}\' class=\'permalink\'></a></h{}>",
-                            level_num, id, header_text, id, level_num
+                            "<h4 id=\'{}\'>{}<a href=\'#{}\' class=\'permalink\'></a></h4>",
+                            id, header_text, id
                         )
                         .unwrap();
                         // include in TOC only for h1-h3? we'll include h1 as top-level
-                        if level_num == 1 {
+                        if level_num == HeadingLevel::H1
+                            || level_num == HeadingLevel::H2
+                            || level_num == HeadingLevel::H3
+                        {
                             write!(
                                 toc_html,
                                 "<li class=\'toc-h1\'><a href=\'#{}\'>{}</a></li>",

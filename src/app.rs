@@ -7,8 +7,9 @@ use web_sys::{IntersectionObserver, IntersectionObserverEntry, IntersectionObser
 use yew::prelude::*;
 
 use crate::AppConfig;
-use crate::parser;
+use crate::parser::parse_markdown;
 use crate::types::MenuItem;
+use crate::types::RenderedPage;
 use crate::utils;
 
 #[function_component(App)]
@@ -90,14 +91,18 @@ pub fn app(props: &AppConfig) -> Html {
                     Ok(resp) => {
                         // nanti check : text() should works (DONE)
                         let text = resp.text().await.unwrap_or_default();
-                        let parsed = parser::parse_markdown(&text);
-                        content_data.set(crate::parsed_markdown::RenderedPage);
+                        let parsed = parse_markdown(&text);
+                        content_data.set(crate::types::RenderedPage {
+                            content_html: parsed.content_html,
+                            toc_html: parsed.toc_html,
+                        })
                     }
                     Err(_) => {
-                        content_data.set(crate::types::RenderedPage);
-
-                        content_html = "<h1>Error</h1><p>Failed to fetch content.</p>".to_string();
-                        toc_html = "".to_string();
+                        content_data.set(crate::types::RenderedPage {
+                            content_html: "<h1>Error</h1><p>Failed to fetch content.</p>"
+                                .to_string(),
+                            toc_html: "".to_string(),
+                        });
                     }
                 }
             });
@@ -130,12 +135,11 @@ pub fn app(props: &AppConfig) -> Html {
         // check: mut tak boleh mut self (DONE MOTHERFUCKERRR)
         let mut opts = IntersectionObserverInit::new();
         opts.root_margin("0px 0px -70% 0px");
-        //
+
         if let Ok(observer) =
             IntersectionObserver::new_callback_with_opts(cb.as_ref().unchecked_ref(), &opts)
         {
             cb.forget();
-
             if let Ok(sections) = doc.query_selector_all("section[id]") {
                 for i in 0..sections.length() {
                     observer.observe(&sections.item(i).unwrap().unchecked_into());
@@ -144,7 +148,7 @@ pub fn app(props: &AppConfig) -> Html {
         }
         || ()
     });
-    // SMOL
+
     {
         let is_open = *is_menu_open;
         use_effect_with(is_open, move |&open| {
