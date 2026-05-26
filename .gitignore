@@ -1,6 +1,6 @@
 /target
 .DS_Store
-.node_modules
+node_modules
 .env
 .env.example
 .env.local
