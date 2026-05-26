@@ -9,7 +9,6 @@ use yew::prelude::*;
 use crate::AppConfig;
 use crate::parser::parse_markdown;
 use crate::types::MenuItem;
-use crate::types::RenderedPage;
 use crate::utils;
 
 #[function_component(App)]

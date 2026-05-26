@@ -79,7 +79,7 @@ pub fn parse_markdown(markdown_input: &str) -> RenderedPage {
                         write!(toc_html, "<li><a href=\'#{}\'>{}</a></li>", id, header_text)
                             .unwrap();
                     }
-                    h3 => {
+                    pulldown_cmark::HeadingLevel::H3 => {
                         // render H3 as its own section with reference to parent H2
                         if !last_h2_text.is_empty() {
                             write!(
@@ -108,7 +108,7 @@ pub fn parse_markdown(markdown_input: &str) -> RenderedPage {
                         )
                         .unwrap();
                     }
-                    h4 => {
+                    pulldown_cmark::HeadingLevel::H4 => {
                         // For other heading levels, emit a normal heading with id
                         write!(
                             content_html,
