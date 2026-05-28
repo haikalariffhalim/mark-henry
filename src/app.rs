@@ -19,7 +19,7 @@ pub fn app(props: &AppConfig) -> Html {
             .to_string(),
         toc_html: "".to_string(),
     });
-    let menu_items = use_state(|| Vec::<MenuItem>::new());
+    let menu_items = use_state(Vec::<MenuItem>::new);
     let is_menu_open = use_state(|| false);
 
     {
@@ -37,11 +37,10 @@ pub fn app(props: &AppConfig) -> Html {
                     branch,
                     Date::now()
                 );
-                if let Ok(resp) = Request::get(&url).send().await {
-                    if let Ok(data) = resp.json::<Vec<MenuItem>>().await {
+                if let Ok(resp) = Request::get(&url).send().await
+                    && let Ok(data) = resp.json::<Vec<MenuItem>>().await {
                         menu_items.set(data);
                     }
-                }
             });
             || ()
         });
