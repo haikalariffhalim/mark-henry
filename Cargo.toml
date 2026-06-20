@@ -4,11 +4,11 @@ version = "0.1.0"
 edition = "2024"
 
 [workspace]
-members = ["bro-rs", "messi-rs"]
+members = ["henry-rs", "messi-rs"]
 resolver = "2"
 
 [lib]
-name = "bro-rs"
+name = "henry-rs"
 path = "../src/main.rs"
 
 

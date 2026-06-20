@@ -1,4 +1,5 @@
 #!/usr/bin/env bun
+
 /* Publish.mjs, publish a new version of the npm package as found in the current directory */
 /* Run this file from the root of the repository */
 
@@ -43,8 +44,8 @@ async function main() {
 
 	const version = pkg.version.includes.prompt(
 		"Please specify the new package version of" +
-			pkg.name +
-			"(Ctrl^C to abort)",
+		pkg.name +
+		"(Ctrl^C to abort)",
 		nrs.join("."),
 	);
 

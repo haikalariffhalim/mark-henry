@@ -1,0 +1,18 @@
+export { createStore } from "./store.js";
+
+export {
+	StoreReadError,
+	StoreWriteError,
+	StoreParseError,
+	StoreValidationError,
+} from "./errors";
+
+export type {
+	FieldDef,
+	FieldsDef,
+	InferStoreConfig,
+	StoreOptions,
+	StoreInstance,
+	StoreUpdater,
+	ValueType,
+} from "./types";

@@ -9,7 +9,7 @@ import path from "node:path";
 import { svgPathBbox } from "svg-path-bbox";
 import parsePath from "svg-path-segments";
 import svgpath from "svgpath";
-import { SVG_PATH_REGEX, getIconsData, htmlFriendlyToTitle } from "./sdk.mjs";
+import { getIconsData, htmlFriendlyToTitle, SVG_PATH_REGEX } from "./sdk.mjs";
 
 /**
  * The svgpath library does not includes a `segments` property on their interface.
@@ -191,9 +191,8 @@ const config = {
 
 						let charRepr;
 						if (xmlNamedEntitiesCodepoints.includes(charDec)) {
-							charRepr = `&${
-								xmlNamedEntities[xmlNamedEntitiesCodepoints.indexOf(charDec)]
-							};`;
+							charRepr = `&${xmlNamedEntities[xmlNamedEntitiesCodepoints.indexOf(charDec)]
+								};`;
 						} else if (charDec < 128) {
 							charRepr = String.fromCodePoint(charDec);
 						} else {
@@ -202,8 +201,8 @@ const config = {
 
 						reporter.error(
 							"Hexadecimal representation of encoded character" +
-								` "${match[0]}" found at index ${charHexReprIndex}:` +
-								` replace it with "${charRepr}".`,
+							` "${match[0]}" found at index ${charHexReprIndex}:` +
+							` replace it with "${charRepr}".`,
 						);
 					}
 				}
@@ -237,8 +236,8 @@ const config = {
 
 							reporter.error(
 								"Named entity representation of encoded character" +
-									` "${match[0]}" found at index ${namedEntiyReprIndex}.` +
-									` Replace it with ${replacement}.`,
+								` "${match[0]}" found at index ${namedEntiyReprIndex}.` +
+								` Replace it with ${replacement}.`,
 							);
 						}
 					}
@@ -269,10 +268,9 @@ const config = {
 								encodedBuf.unshift(`&#${charDecimalCode};`);
 							} else if (xmlNamedEntitiesCodepoints.includes(charDecimalCode)) {
 								encodedBuf.unshift(
-									`&${
-										xmlNamedEntities[
-											xmlNamedEntitiesCodepoints.indexOf(charDecimalCode)
-										]
+									`&${xmlNamedEntities[
+									xmlNamedEntitiesCodepoints.indexOf(charDecimalCode)
+									]
 									};`,
 								);
 							} else if (charDecimalCode === 0) {
@@ -289,7 +287,7 @@ const config = {
 
 						reporter.error(
 							`Unencoded unicode characters found in title "${iconTitleText}":` +
-								` rewrite it as "${encodedIconTitleText}".`,
+							` rewrite it as "${encodedIconTitleText}".`,
 						);
 					}
 
@@ -310,11 +308,10 @@ const config = {
 							getTitleTextIndex(ast.source) + match.index + 1;
 						let replacement;
 						if (xmlNamedEntitiesCodepoints.includes(decimalNumber)) {
-							replacement = `"&${
-								xmlNamedEntities[
-									xmlNamedEntitiesCodepoints.indexOf(decimalNumber)
+							replacement = `"&${xmlNamedEntities[
+								xmlNamedEntitiesCodepoints.indexOf(decimalNumber)
 								]
-							};"`;
+								};"`;
 						} else {
 							replacement = String.fromCodePoint(decimalNumber);
 							replacement = replacement === '"' ? `'"'` : `"${replacement}"`;
@@ -322,8 +319,8 @@ const config = {
 
 						reporter.error(
 							`Unnecessary encoded character "${match[0]}" found` +
-								` at index ${decimalCodepointCharIndex}:` +
-								` replace it with ${replacement}.`,
+							` at index ${decimalCodepointCharIndex}:` +
+							` replace it with ${replacement}.`,
 						);
 					}
 
@@ -352,7 +349,7 @@ const config = {
 				} else if (width !== iconSize && height !== iconSize) {
 					reporter.error(
 						`Size of <path> must be exactly ${iconSize} in one dimension;` +
-							` the size is currently ${width} x ${height}`,
+						` the size is currently ${width} x ${height}`,
 					);
 				}
 			},
@@ -384,7 +381,7 @@ const config = {
 						errorMessage += ` at index ${segment.start + pathDIndex}`;
 						reporter.error(
 							"Maximum precision should not be greater than" +
-								` ${iconMaxFloatPrecision}; ${errorMessage}`,
+							` ${iconMaxFloatPrecision}; ${errorMessage}`,
 						);
 					}
 				}
@@ -860,9 +857,8 @@ const config = {
 						errorMessage += ` in chain "${readableChain}"`;
 					}
 
-					errorMessage += ` at index ${
-						segment.start + pathDIndex
-					} (should be removed)`;
+					errorMessage += ` at index ${segment.start + pathDIndex
+						} (should be removed)`;
 					reporter.error(errorMessage);
 				}
 			},
@@ -877,7 +873,7 @@ const config = {
 					} else {
 						reporter.error(
 							"Unexpected character(s), most likely extraneous" +
-								" whitespace, detected in SVG markup",
+							" whitespace, detected in SVG markup",
 						);
 					}
 				}
@@ -902,7 +898,7 @@ const config = {
 							: "0";
 						reporter.error(
 							`Found "-0" at index ${negativeZeroFileIndex} (should` +
-								` be "${replacement}")`,
+							` be "${replacement}")`,
 						);
 					}
 				}
@@ -922,7 +918,7 @@ const config = {
 				) {
 					reporter.error(
 						`<path> must be centered at (${iconTargetCenter}, ${iconTargetCenter});` +
-							` the center is currently (${centerX}, ${centerY})`,
+						` the center is currently (${centerX}, ${centerY})`,
 					);
 				}
 			},
@@ -989,9 +985,8 @@ const config = {
 
 					// Contains invalid characters
 					if (invalidCharactersMsgs.length > 0) {
-						reason = `unexpected character${
-							invalidCharactersMsgs.length > 1 ? "s" : ""
-						} found (${invalidCharactersMsgs.join(", ")})`;
+						reason = `unexpected character${invalidCharactersMsgs.length > 1 ? "s" : ""
+							} found (${invalidCharactersMsgs.join(", ")})`;
 						reporter.error(`${errorMessage}: ${reason}`);
 					}
 				}

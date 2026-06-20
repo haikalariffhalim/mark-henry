@@ -1,19 +1,48 @@
 {
 	"name": "mark-henry",
 	"version": "0.1.0",
+	"engines": {
+		"bun": ">=1.0.0"
+	},
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"build": "bun scripts/build.ts && bun run tsgo",
+		"test": "bun test",
+		"typecheck": "tsgo --noEmit",
+		"prepublishOnly": "bun run build"
+	},
 	"type": "module",
-	"private": true,
-	"dependencies": {
-		"bun-plugin-html": "^2.1.4",
-		"marked": "^18.0.4",
-		"svg-path-bbox": "^2.1.0",
-		"svg-path-segments": "^2.0.1",
-		"svgpath": "^2.6.0"
-	},
-	"devDependencies": {
-		"@types/bun": "latest"
-	},
+	"module": "./dist/index.js",
+	"types": "./dist/index.ts",
 	"peerDependencies": {
-		"typescript": "^5"
+		".": {
+			"types": "./dist/index.ts",
+			"import": "./dist/index.ts"
+		},
+		"private": true,
+		"publishConfig": {
+			"access": "public"
+		}
+	},
+	"bun-types": "1.0.4",
+	"@changesets/cli": "^2.29.8",
+	"vitest": "^4.1.0",
+	"packageManager": "bun@1.3.10",
+	"dependencies": {
+		"@standard-schema/spec": "catalog:",
+		"@standard-schema/utils": "catalog:",
+		"better-result": "catalog:",
+		"changeset": "bunx changeset",
+		"changeset:version": "bunx changeset version",
+		"changeset:publish": "bun run ci:publish",
+		"release:prepare": "bun scripts/release-prepare.ts",
+		"ci:version": "bun scripts/ci-version.ts",
+		"ci:publish": "bun scripts/ci-publish.ts",
+		"release:publish": "bun run build && bun run ci:publish",
+		"typecheck": "tsgo --noEmit",
+		"prepublishOnly": "bun run build"
 	}
+}
 }

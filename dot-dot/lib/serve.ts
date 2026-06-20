@@ -4,7 +4,7 @@ import { parse } from "./parse";
 
 const {
 	directory = process.argv.slice(2)[0] ?? ".",
-	port = 3000,
+	port = 4040,
 	hostname = "0.0.0.0",
 	development = process.env.NODE_ENV !== "production",
 	lowMemoryMode = false,

@@ -1,5 +1,25 @@
 {
 	"name": "dotdot",
 	"version": "0.1.0",
-	"private": true
+	"private": true,
+	"dependencies": {
+		"bun-plugin-html": "^2.1.4",
+		"svg-path-bbox": "^2.1.0",
+		"svg-path-segments": "^2.0.1",
+		"svgpath": "^2.6.0",
+		"bun-types": "1.0.4"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.4.16",
+		"@types/bun": "latest",
+		"autoprefixer": "^10.4.20",
+		"bun-plugin-html": "^2.1.4",
+		"bun-html-live-reload": "^0.1.4",
+		"postcss": "^8.4.47",
+		"tailwindcss": "^3.4.14",
+		"ultracite": "7.8.3"
+	},
+	"peerDependencies": {
+		"typescript": "^5"
+	}
 }
