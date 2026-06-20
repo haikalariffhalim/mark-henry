@@ -16,5 +16,5 @@ clap = { version = "4.5.17", features = ["derive"] }  # For CLI args
 
 
 [[bin]]
-name = "messi-rs"
+name = ".messi-rs"
 path = "src/main.rs"
