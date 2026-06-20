@@ -1,0 +1,19 @@
+{
+	"name": "mjJS",
+	"version": "0.1.1",
+	"description": "Serve like The Goat",
+	"main": "index.ts",
+	"files": [
+		"index.ts",
+		"parse.ts"
+	],
+	"scripts": {
+		"postinstall": "chmod +x index.ts"
+	},
+	"devDependencies": {
+		"bun-types": "1.0.4"
+	},
+	"bin": {
+		"bun-serve": "./index.ts"
+	}
+}

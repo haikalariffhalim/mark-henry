@@ -1,5 +1,5 @@
 {
-	"$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
 	"vcs": {
 		"enabled": true,
 		"clientKind": "git",
@@ -30,8 +30,7 @@
 		},
 		"domains": {
 			"next": "recommended",
-			"react": "recommended",
-			"rust": "recommended"
+			"react": "recommended"
 		}
 	},
 	"assist": {

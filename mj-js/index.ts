@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 
-import { parse } from './parse'
+import { parse } from './src/lib/parse'
 
 const {
   directory = process.argv.slice(2)[0] ?? '.',
