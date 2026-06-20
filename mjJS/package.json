@@ -5,11 +5,7 @@
 	"main": "index.ts",
 	"files": [
 		"index.ts",
-		"parse.ts",
-		"tsconfig.json",
-		"package.json",
-		"README.md",
-		"LICENSE"
+		"parse.ts"
 	],
 	"scripts": {
 		"postinstall": "chmod +x index.ts"
