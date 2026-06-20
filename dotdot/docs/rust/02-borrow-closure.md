@@ -227,13 +227,13 @@ use_effect_with(content_data.clone(), move |_| {
     let cb = Closure::wrap(Box::new(move |entries: Vec<JsValue>, _| {
         // Inside this closure, we try to use doc
         let selector = format!("#TableOfContents a[href='#{}']", target_id);
-        if let Ok(Some(link)) = doc.query_selector(&selector) {  // ❌ ERROR!
+        if let Ok(Some(link)) = doc.query_selector(&selector) {  //  ERROR!
             // ...
         }
     }) as Box<dyn FnMut(Vec<JsValue>, IntersectionObserver)>);
 
     // After creating cb, we try to use doc again
-    if let Ok(sections) = doc.query_selector_all("section[id]") {  // ❌ ERROR!
+    if let Ok(sections) = doc.query_selector_all("section[id]") {  //  ERROR!
         // ...
     }
 });
@@ -265,7 +265,7 @@ Step 2: doc is moved into cb closure
     doc (now owned by cb)
 
 Step 3: Try to use doc again
-    if let Ok(sections) = doc.query_selector_all(...) {  // ❌ ERROR!
+    if let Ok(sections) = doc.query_selector_all(...) {  // ERROR!
         // doc was already moved to cb in Step 2
     }
 ```
@@ -284,17 +284,17 @@ use_effect_with(content_data.clone(), move |_| {
     let doc = window.document().unwrap();
     
     // Clone doc so inner closure can have its own copy
-    let doc_clone = doc.clone();  // ✅ Key fix!
+    let doc_clone = doc.clone();  //  Key fix!
 
     let cb = Closure::wrap(Box::new(move |entries: Vec<JsValue>, _| {
         // Inner closure uses the clone
-        if let Ok(Some(link)) = doc_clone.query_selector(&selector) {  // ✅ OK!
+        if let Ok(Some(link)) = doc_clone.query_selector(&selector) {  //  OK!
             // ...
         }
     }) as Box<dyn FnMut(Vec<JsValue>, IntersectionObserver)>);
 
     // Outer closure still has the original doc
-    if let Ok(sections) = doc.query_selector_all("section[id]") {  // ✅ OK!
+    if let Ok(sections) = doc.query_selector_all("section[id]") {  // OK!
         // ...
     }
 });
@@ -416,12 +416,12 @@ fn setup_observer() {
 
 ### Compile-Time vs Runtime
 
-✅ **Rust catches these at compile time:**
+ **Rust catches these at compile time:**
 - Borrow of moved value
 - Use of mutable reference while immutable references exist
 - Multiple mutable references
 
-❌ **These would happen in other languages (runtime errors):**
+ **These would happen in other languages (runtime errors):**
 - Data races
 - Use-after-free
 - Null pointer dereferences
@@ -521,4 +521,3 @@ The mutable closure holds a mutable borrow of `x`, so we can't borrow it immutab
 - [The Rust Book - References and Borrowing](https://doc.rust-lang.org/book/ch04-02-references-and-borrowing.html)
 - [The Rust Book - Closures](https://doc.rust-lang.org/book/ch13-01-closures.html)
 - [Rustlings Exercises](https://github.com/rust-lang/rustlings)
-

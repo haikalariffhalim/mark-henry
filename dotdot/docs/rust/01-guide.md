@@ -2,7 +2,7 @@
 
 Welcome to the mark-henry project! This guide helps you navigate the documentation and understand the codebase.
 
-## 📚 Documentation Files
+##  Documentation Files
 
 This project includes several comprehensive documentation files:
 
@@ -54,7 +54,7 @@ This project includes several comprehensive documentation files:
 
 ---
 
-## 🗺️ Navigation Guide
+##  Navigation Guide
 
 ### Starting Fresh?
 1. **First, read:** [README.md](README.md) for project overview
@@ -81,7 +81,7 @@ This project includes several comprehensive documentation files:
 
 ---
 
-## 📖 Document Overviews
+##  Document Overviews
 
 ### BORROWING_AND_CLOSURES.md
 
@@ -107,7 +107,7 @@ Overview:
 │   ├── Visualization (diagrams)
 │   └── Step-by-step breakdown
 ├── Three Solutions
-│   ├── Solution 1: Cloning ✅ (What we used)
+│   ├── Solution 1: Cloning  (What we used)
 │   ├── Solution 2: Borrowing
 │   └── Solution 3: Rc/Arc smart pointers
 ├── Practical Example
@@ -185,7 +185,7 @@ Overview:
 
 ---
 
-## 🎯 Quick Reference
+## Quick Reference
 
 ### Rust Concepts Quick Links
 
@@ -213,7 +213,7 @@ Overview:
 
 ---
 
-## 💡 Learning Paths
+## Learning Paths
 
 ### Path 1: "I want to understand this bug"
 **Time:** 30-45 minutes
@@ -254,25 +254,25 @@ Overview:
 
 ---
 
-## 📝 Document Features
+## Document Features
 
 ### BORROWING_AND_CLOSURES.md Features
-✅ Multiple real-world examples  
-✅ Visual diagrams and flowcharts  
-✅ Comparison with other languages  
-✅ Interactive exercises with answers  
-✅ Link to Rust book resources  
+[] Multiple real-world examples  
+[] Visual diagrams and flowcharts  
+[] Comparison with other languages  
+[] Interactive exercises with answers  
+[] Link to Rust book resources  
 
 ### PARSER_DOCUMENTATION.md Features
-✅ Step-by-step algorithm explanation  
-✅ Complete input/output examples  
-✅ State transition flowchart  
-✅ Performance analysis  
-✅ Test case suggestions  
+[] Step-by-step algorithm explanation  
+[] Complete input/output examples  
+[] State transition flowchart  
+[] Performance analysis  
+[] Test case suggestions  
 
 ---
 
-## 🔗 All Document Links
+##  All Document Links
 
 ### Borrowing & Closures Main Sections
 - [Ownership Overview](BORROWING_AND_CLOSURES.md#ownership-overview)
@@ -298,7 +298,7 @@ Overview:
 
 ---
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### If you have 5 minutes:
 Read: [The Bug We Fixed](BORROWING_AND_CLOSURES.md#the-bug-we-fixed)
@@ -322,7 +322,7 @@ Read:
 
 ---
 
-## 💬 How to Use These Docs
+## How to Use These Docs
 
 ### While Reading Code
 If you see something in `src/app.rs` or `src/parser.rs` that confuses you, look it up:
@@ -342,7 +342,7 @@ If you see something in `src/app.rs` or `src/parser.rs` that confuses you, look 
 
 ---
 
-## 📌 Summary
+## Summary
 
 | Document | Best For | Time | Difficulty |
 |----------|----------|------|------------|
@@ -352,7 +352,7 @@ If you see something in `src/app.rs` or `src/parser.rs` that confuses you, look 
 
 ---
 
-## ✨ Key Takeaways
+## Key Takeaways
 
 1. **The Bug:** The `doc` variable was moved into a closure, then we tried to use it again
 2. **The Fix:** Clone `doc` before moving it into the inner closure

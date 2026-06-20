@@ -4,14 +4,16 @@
 	"type": "module",
 	"private": true,
 	"scripts": {
-		"dev": "bun run --hot serve.ts",
+		"postinstall": "chmod +x index.ts",
 		"build": "bun run build.ts",
 		"check": "ultracite check",
 		"fix": "ultracite fix"
 	},
+	"bin": {
+		"bun-serve": "src/index.ts"
+	},
 	"dependencies": {
 		"bun-plugin-html": "^2.1.4",
-		"marked": "^18.0.4",
 		"svg-path-bbox": "^2.1.0",
 		"svg-path-segments": "^2.0.1",
 		"svgpath": "^2.6.0"
