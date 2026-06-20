@@ -1,0 +1,9 @@
+/target
+.DS_Store
+node_modules
+.env
+.env.example
+.env.local
+dist
+.mdjs.swp
+.zed

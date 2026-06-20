@@ -4,14 +4,15 @@ version = "0.1.0"
 edition = "2024"
 
 [workspace]
-members = ["mookRS", "messiRS"]
+members = ["bro-rs", "messi-rs"]
 resolver = "2"
 
 [[bin]]
-name = "src/main"
-path = "./src/main.rs"
+name = "bro-rs"
+path = "../src/main.rs"
+crate-type = ["lib"]
 
-[lib]
-name = "src/lib"
+[[bin]]
+name = "messi-rs"
 path = "./src/main.rs"
 crate-type = ["lib"]
