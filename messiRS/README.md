@@ -6,12 +6,7 @@
 
 | Table            |      API Usage                                       |
 | ---------------- | -----------------------------------------------------|
-| 						     |  	api.useMessi.savage.to.penang({									  |
-|									 |			ctx:svg{ png,jpg, ...rest}   					 			    |
-|									 |		});																							  |
-|									 |		handler: await (ctx,args)													|
-| `svg to png` 		 | 								↓↓↓↓↓						        ↓↓↓↓↓					|
-										  filePath:{"/../..svg",(messi.RS."to/../somewhere")} |
+| `svg to png		   |  **	cargo-svgtoicons --all **
 |								   |																											|
 |	`png to svg`		 |																											|
 | `svg to pdf`   	 |                                                      |
