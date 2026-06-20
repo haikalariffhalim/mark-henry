@@ -3,8 +3,8 @@ name = "messi-rs"
 version = "0.1.0"
 edition = "2024"
 description = "A tool to convert SVG to icon formats (ICO, ICNS, PNGs)."
-license = "MIT"
-repository = "https://github.com/haikalariffhalim/messiRS"
+license = "APACHE 2.0"
+repository = "https://github.com/haikalariffhalim/mark-henry/messi-rs"
 
 [dependencies]
 resvg = "0.44.0"
@@ -16,5 +16,5 @@ clap = { version = "4.5.17", features = ["derive"] }  # For CLI args
 
 
 [[bin]]
-name = "messiRS"
+name = "messi-rs"
 path = "src/main.rs"

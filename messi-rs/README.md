@@ -1,4 +1,4 @@
-# messiRS
+# messi-rs
 
 ## Convert from Savage (SVG) to an Icon (ico, png,...) just like The Goat himself
 
