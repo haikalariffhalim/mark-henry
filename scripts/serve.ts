@@ -1,30 +1,42 @@
-import path from "path";
-import { $ } from "bun";
-import { withHtmlLiveReload } from "./henryJS/node_modules/bun-html-live-reload";
+#!/usr/bin/env bun
 
-const outdir = "./dist";
+import { parse } from "./parse";
 
-await $`bun run build`;
+const {
+	directory = process.argv.slice(2)[0] ?? ".",
+	port = 3000,
+	hostname = "0.0.0.0",
+	development = process.env.NODE_ENV !== "production",
+	lowMemoryMode = false,
+	dhParamsFile,
+	key,
+	passphrase,
+} = parse(process.argv.slice(2));
 
-export default withHtmlLiveReload(
-	{
-		fetch(req) {
-			const pathname = new URL(req.url).pathname;
-			const filePath =
-				pathname === "/docs" ? `${outdir}/index.html` : outdir + pathname;
-			const file = Bun.file(path.resolve(filePath));
-			return new Response(file);
-		},
-		error(error: Error) {
-			console.error(error);
-			return new Response(null, { status: 404 });
-		},
-		port: 3000,
+const finalPort = port === "random" ? generateRandomPort() : String(port);
+
+Bun.serve({
+	port: finalPort,
+	hostname: String(hostname),
+	development: Boolean(development),
+	lowMemoryMode: Boolean(lowMemoryMode),
+	key: key === undefined ? undefined : String(key),
+	cert: key === undefined ? undefined : String(key).replace(/\.key$/, ".crt"),
+	dhParamsFile: dhParamsFile === undefined ? undefined : String(dhParamsFile),
+	passphrase: passphrase === undefined ? undefined : String(passphrase),
+	async fetch(req) {
+		let fp = directory + new URL(req.url).pathname;
+		if (fp.endsWith("/")) {
+			fp += "index.html";
+		}
+		return new Response(Bun.file(fp));
 	},
-	{
-		watchPath: path.resolve(import.meta.dir, "src"),
-		async onChange() {
-			await $`bun run build`;
-		},
+	error() {
+		return new Response(null, { status: 404 });
 	},
-);
+});
+console.log(`Serving ${directory} at http://${hostname}:${finalPort}`);
+
+function generateRandomPort() {
+	return Math.floor(Math.random() * 10000) + 10000;
+}

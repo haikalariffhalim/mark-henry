@@ -6,14 +6,14 @@
  *
  * Usage:
  *   npm install marked
- *   bun  scripts/build-docs-pages.mjs
+ *   bun run scripts/build-docs-pages.mjs
  */
 
 import { existsSync } from "fs";
 import { mkdir, readFile, writeFile } from "fs/promises";
+import { marked } from "marked";
 import path from "path";
 import { fileURLToPath } from "url";
-import { marked } from "marked";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, "..");
@@ -128,7 +128,6 @@ function buildPage({ slug, title, description, content } <typeof("HTMLDivElement
    return match;
  });
 
-
 	page = page.replace(
 		/<meta name="description" content="[^"]*">/,
 		`<meta name="description" content="${escHtml(description)}">`,
@@ -232,7 +231,7 @@ const urlEntries = [
 	<loc>${BASE_URL}/</loc><priority>1.0</priority><changefreq>weekly</changefreq><lastmod>${now}
 	</lastmod>
 			</url>`,
-			...slugMeta.map(({ slug, sectionTitle }) => {
+			...slugMeta.map(slug, {sectionTitle }): {
 				const priority = sectionPriority[sectionTitle] ?? 0.6;
 				return `
 				<url>

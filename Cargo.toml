@@ -7,4 +7,4 @@ edition = "2024"
 members = ["mookRS"]
 resolver = "2"
 
-[]
+[dependencies]
