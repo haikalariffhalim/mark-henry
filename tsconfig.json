@@ -19,8 +19,8 @@
 		"incremental": true,
 		"plugins": [
 			{
-				"name": "next",
-			},
+				"name": "next"
+			}
 		],
 		"include": [
 			"next-env.d.ts",
@@ -33,6 +33,7 @@
 			"../scripts/serve.ts",
 			"scripts/build-docs-pages.mjs",
 			"mj-js/src/main.mjs",
-			"scripts/persist.mjs",
+			"scripts/persist.mjs"
 		]
 	}
+}
