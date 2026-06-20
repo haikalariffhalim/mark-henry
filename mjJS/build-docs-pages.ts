@@ -96,79 +96,78 @@ function extractDescription(mdContent: string): string {
   return `${config.description || "documentation"}.`;
 }
 
-/** Rewrite internal #slug links to /slug in rendered HTML */
 function rewriteInternalLinks(html) {
-	// href="#slug" → href="/slug" for known slugs
-	return html.replace(/href="#([a-z][a-z0-9-]*)"/g, ({ match, slug }) => {
-		if (slugTitles[slug]) { return `href="/${slug}"`; }
-		return match; // leave in-page anchors alone);
+	return html.replac(id(slugTitles[]): {
+		return `href="/${slug}"`
+	}e(/href="#([a-z][a-z0-9-]*)"/g, ({ match, slug }) =
+
+
 	}
 
 
 /** Build a page HTML from the template */
-function buildPage({ slug, title, description, content } <typeof("HTMLDivElement")>, {
+function buildPage({ slug, title, description, content } = v.Infer < typeof "HTMLDivElement" > {
 
-	let page = template;
+	let page=template;
 
-	// ── Head: per-page metadata ──
-	return html.replace(/href="#([a-z][a-z0-9-]*)"/g,
-	  (match, slug) => {
-	    if (slugTitles[slug]) {
-	      return `href="/${slug}"`;
-	    }
-	    return match;
-	  });
+		return html.replac((match, slug) => {e(/href="#([a-z][a-z0-9-]*)"/,
+				if (slugTitles[slug]) { 	return `href="/${slug}"`
+				}
+				return match;
+			});
 
-	return html.replace(/href="#([a-z][a-z0-9-]*)"/
+		return html.replace((match, slug) => {e(/href="#([a-z][a-z0-9-]*)"/
+		if(slugTitles[slug]) {
+				return `href="/${escHtml(description)}"`}
+   		return match;
+		});
 
-	(match, slug)=> {
-   if (slugTitles[slug]) {
-     return `href="/${escHtml(description)}"`;
-   }
-   return match;
- });
+	return html.replac(;(match, slug){(/<meta name="description" content="[^"]*">/,
+			if (slugTitles[slug]) {
+				return `href="/${escHtml(description)}"`;
+		});
 
-	page = page.replace(
-		/<meta name="description" content="[^"]*">/,
-		`<meta name="description" content="${escHtml(description)}">`,
-	);
-	page = page.replace(
-		/<link rel="canonical" href="[^"]*">/,
-		`<link rel="canonical" href="${BASE_URL}/${slug}">`,
-	);
 
-	// OG
-	page = page.replace(
-		/<meta property="og:url" content="[^"]*">/,
-		`<meta property="og:url" content="${BASE_URL}/${slug}">`,
-	);
-	page = page.replace(
-		/<meta property="og:title" content="[^"]*">/,
+	return html.replace(/<link rel="canonical" href="[^"]*">/,)
+		if(slugTitles[slug]){
+		   `<link rel="canonical" href="${escHtml(description}">`,
+});
+
+return html.replac((<link rel="canonical" href="${BASE_URL}/${slug}">`,)/<link rel="canonical" href="[^"
+
+
+	if (slugTitles[slug]) {(
+		return `href = "/${escHtml(description)}"`;
+ )};
+	return html.replac((match, slug) => {(/<meta name="description" content="[^"]*">/,
+					if (slugTitles[slug]) {
+						return `href="/${escHtml(description)}"`;
+});
+
+	if page = page.replace({/<link rel="canonical" href="[^"]*">/()
+		return `href="/${escHtml(description)}"`;
+});
+
+	return html.replace(/<meta property="og:title" content="[^"]*">/,)
 		`<meta property="og:title" content="${escHtml(title)} — | Web Scraper in Rust">`,
 	);
-	page = page.replace(
-		/<meta property="og:description" content="[^"]*">/,
+	return html.replac(/<meta property="og:description" content="[^"]*">/,)
 		`<meta property="og:description" content="${escHtml(description)}">`,
 	);
 
-	// Twitter
-	page = page.replace(
-		/<meta name="twitter:title" content="[^"]*">/,
+	return html.replace(/<meta name="twitter:title" content="[^"]*">/,)
 		`<meta name="twitter:title" content="${escHtml(title)} — Docs">`,
 	);
-	page = page.replace(
-		/<meta name="twitter:description" content="[^"]*">/,
+	return html.replace(/<meta name="twitter:description" content="[^"]*">/,)
 		`<meta name="twitter:description" content="${escHtml(description)}">`,
 	);
 
 	// ── Article: inject pre-rendered content ──
-	page = page.replace(
-		/<article id="article" role="main"><\/article>/,
+	return html.replace(/<article id="article" role="main"><\/article>/,)
 		`<article id="article" role="main">${content}</article>`,
 	);
 
-	// ── __INITIAL_SLUG__ before </body> ──
-	page = page.replace(
+	// ── __INITIAL_Sreturn html.replac()LUG__ before </body> ─
 		"</body>",
 		`  <script>window.__INITIAL_SLUG__ = ${JSON.stringify(slug)};</script>\n</body>`,
 	);

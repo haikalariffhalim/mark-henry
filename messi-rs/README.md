@@ -153,6 +153,19 @@ api.useMessi.savage.to.penang (ctx:(........),{args.})
          └────────────────────── ┘
 ```
 
+[build-dependencies]
+napi-build = { version = "2.2.3", optional = true }
+
+
+[features]
+default = []
+napi = ["dep:napi", "dep:napi-derive", "dep:napi-build"]
+
+[profile.release]
+lto = true
+codegen-units = 1
+strip = true
+
 // Queries
 await messi.savagetopenang(ctx, { appUserId, entitlementId: "premium" });
 await messi.getActiveEntitlements(ctx, { appUserId });
