@@ -36,8 +36,11 @@ User catches ghost
        │
        ▼
 CollectionContext.catchGhost()
+	
   ├── 1. setCollection(...)     ← instant optimistic UI update
+  │
   ├── 2. AsyncStorage.setItem() ← offline-safe local backup
+  │
   └── 3. convexHttp.mutation(convexFns.catchGhost, { deviceId, ghostId, ... })
                 │
                 ▼
@@ -46,58 +49,46 @@ CollectionContext.catchGhost()
                 └── upserts row in ghostCollection table
 ```
 
+### Using messiRS Custom Validator 
+
+
+
+```rs
+
+api.useMessi.savage.to.penang (ctx:(........),{args.})
+	
+[!]
+		api.useMessi.savage.to.penang ({
+			ctx:svg{png,jpg, ...rest}    		 ←── [1] convert svg to png/jpg			
+		handler: await (ctx,args){
+			
+		filePath:{"/../..svg",  	  ←── [2] input file path to convert 
+			
+			(messi.RS."to/somefile/somewhere")} 
+		)}
+		
+		//... return from your function with intended value
+		
+		
+```
 
 ```sh
 
-
-
-	         
-												
-												   ┌─────────────────┐
-													 │	 your          │
-													 │  context:{....} │
-													 └────────┬────────┘
-[1]                                 ▼
-api.useMessi.savage.to.penang (ctx:(........),{args.})
-
-
-
-    [!WARNING]
-    api.useMessi.savage.to.penang({
-								ctx:svg{png,jpg, ...rest}
-						});
-								handler: await (ctx,args)
-│
-│
+[1]
 ├── [2] savage.to.penang     ← convert svg to png
 │
 │
 ├── [3] savage.to.jepang     ← convert svg to jpg
 │
 │
-└── [4] savage.to.econsave   ← convert svg to ico			
-					
-```
-### Custom Validator as you like 
+└── [4] savage.to.econsave   ← convert svg to ico	
 
 ```
-[!WARNING]
-api.useMessi.savage.to.penang({
-								ctx:svg{png,jpg, ...rest}
-						});
-								handler: await (ctx,args)
-					 
-					 <initial format>	        <a handler>
-					< target-file-path> 								      <output-file-path>
-								↓↓↓↓↓				          ↓↓↓↓↓          ↓↓↓↓↓	
-								
-					filePath:{"/../..svg",   (messi.RS."to/somefile/somewhere")} 
 
-````
 
 ### State Transitions
 
-```
+```sh
 ┌─────────────────┐
 │  Start parsing  │
 └────────┬────────┘
@@ -107,7 +98,7 @@ api.useMessi.savage.to.penang({
 │  Iterate through events                 │
 └────────┬────────────────────────────────┘
          │
-    ┌────┴─────┐
+    ┌────┴───── ┐
     │           │
     ▼           ▼
  HEADING    NON-HEADING
