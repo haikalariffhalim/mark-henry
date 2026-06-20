@@ -22,26 +22,17 @@
 				"name": "next",
 			},
 		],
-		"paths": {
-			"@/*": [
-				"./*"
-			],
-		},
-	},
-	"include": [
-		"next-env.d.ts",
-		"**/*.ts",
-		"**/*.tsx",
-		".next/types/**/*.ts",
-		".next/dev/types/**/*.ts",
-		"**/*.mts",
-		"../scripts/build-docs-pages.ts",
-		"../scripts/serve.ts",
-		"scripts/build-docs-pages.mjs",
-		"mj-js/src/main.mjs",
-		"scripts/persist.mjs",
-	],
-	"exclude": [
-		"node_modules"
-	],
-}
+		"include": [
+			"next-env.d.ts",
+			"**/*.ts",
+			"**/*.tsx",
+			".next/types/**/*.ts",
+			".next/dev/types/**/*.ts",
+			"**/*.mts",
+			"../scripts/build-docs-pages.ts",
+			"../scripts/serve.ts",
+			"scripts/build-docs-pages.mjs",
+			"mj-js/src/main.mjs",
+			"scripts/persist.mjs",
+		]
+	}
