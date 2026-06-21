@@ -23,7 +23,7 @@ export {
 	type CommandRegistryProviderProps,
 	type RuntimeCommand,
 	type CommandPaletteItem,
-} from "./lib/runtime";
+} from "../lib/runtime";
 
 export {
 	ThemeProvider,

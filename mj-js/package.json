@@ -1,7 +1,6 @@
 {
 	"name": "mj-js",
 	"version": "0.1.0",
-	"type": "module",
 	"private": true,
 	"scripts": {
 		"build": "bun run scripts/build.ts && tsgo",
@@ -11,6 +10,8 @@
 		"check": "ultracite check",
 		"fix": "ultracite fix"
 	},
+	"type": "module",
+	"main": "src/index.ts",
 	"bin": {
 		"bun-serve": "src/index.ts"
 	},
@@ -38,7 +39,6 @@
 	"peerDependencies": {
 		"typescript": "^5"
 	},
-	"main": "src/index.ts",
 	"exports": {
 		".": {
 			"types": "./dist/index.d.ts",

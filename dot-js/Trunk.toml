@@ -3,5 +3,5 @@ target = ["index.html"],
 
 
 [[copy]]
-source = "docs"
+source = "dot-dot/docs/index.html"
 target = "index.md"

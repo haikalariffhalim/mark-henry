@@ -13,8 +13,8 @@ for (const entry of entrypoints) {
 		outdir: "./dist",
 		target: "bun",
 		format: "esm",
-		external: ["bun", "@bunli/tui", "@bunli/runtime"],
+		external: ["bun", "@dot/docs", "@dot/runtime"],
 	});
 }
 
-console.log("✅ @bunli/utils built successfully");
+console.log("@bun/utils built successfully");

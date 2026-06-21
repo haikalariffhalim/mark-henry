@@ -7,7 +7,5 @@ async function clean(globPath: string) {
 	}
 }
 
-await clean(".turbo");
-await clean("packages/*/dist");
-await clean("packages/*/.turbo");
-await clean("packages/*/*.tsbuildinfo");
+
+await clean("mj-js/*/dist");

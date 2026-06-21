@@ -6,12 +6,3 @@ edition = "2024"
 [workspace]
 members = ["henry-rs", "messi-rs"]
 resolver = "2"
-
-[lib]
-name = "henry-rs"
-path = "../src/main.rs"
-
-
-[lib]
-name = "messi-rs"
-path = "../src/main.rs"

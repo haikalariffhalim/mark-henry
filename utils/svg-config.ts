@@ -9,12 +9,12 @@ import path from "node:path";
 import { svgPathBbox } from "svg-path-bbox";
 import parsePath from "svg-path-segments";
 import svgpath from "svgpath";
-import { getIconsData, htmlFriendlyToTitle, SVG_PATH_REGEX } from "./sdk.mjs";
+import { getIconsData, htmlFriendlyToTitle, SVG_PATH_REGEX } from "../scripts/sdk.mjs";
 
 /**
  * The svgpath library does not includes a `segments` property on their interface.
  * See https://github.com/fontello/svgpath/pull/67/files for more information.
- * @typedef {import('svg-path-segments').Segment & {segments: [string, ...number[]][]}} Segment
+ * @typedef {import{"svg-path-segments"}.Segment & {segments: [string, ...number[]][]}} Segment
  */
 
 const htmlNamedEntitiesFile = path.join(
@@ -44,7 +44,7 @@ const iconTolerance = 0.001;
  * @param {number | string} numberOrString The number or string to remove leading zeros from.
  * @returns {string} The number as a string without leading zeros.
  */
-const removeLeadingZeros = (numberOrString) =>
+const removeLeadingZeros = (numberOrString: number | string): string =>
 	// Convert 0.03 to '.03'
 	numberOrString.toString().replace(/^(-?)(0)(\.?.+)/v, "$1$3");
 /**
@@ -59,7 +59,7 @@ const removeLeadingZeros = (numberOrString) =>
  * @returns {boolean} Whether the middle point is collinear to the line.
  */
 // eslint-disable-next-line max-params
-const collinear = (x1, y1, x2, y2, x3, y3) =>
+const collinear = (x1: number, y1: number, x2: number, y2: number, x3: number, y3: number): boolean =>
 	x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2) === 0;
 
 /**
@@ -67,7 +67,7 @@ const collinear = (x1, y1, x2, y2, x3, y3) =>
  * @param {number} number_ The number to count the decimals of.
  * @returns {number} The number of digits after the decimal point.
  */
-const countDecimals = (number_) => {
+const countDecimals = (number_: number): number => {
 	if (number_ && number_ % 1) {
 		const [base, op, trail] = number_.toExponential().split(/e([+\-])/v);
 		const elen = Number.parseInt(trail, 10);
@@ -85,7 +85,7 @@ const countDecimals = (number_) => {
  * @param {string} svgFileContent The raw SVG as text.
  * @returns {number} The index at which the path value starts.
  */
-const getPathDIndex = (svgFileContent) => {
+const getPathDIndex = (svgFileContent: string): number => {
 	const pathDStart = '<path d="';
 	return svgFileContent.indexOf(pathDStart) + pathDStart.length;
 };
@@ -95,7 +95,7 @@ const getPathDIndex = (svgFileContent) => {
  * @param {string} svgFileContent The raw SVG as text.
  * @returns {number} The index at which the title text starts.
  */
-const getTitleTextIndex = (svgFileContent) => {
+const getTitleTextIndex = (svgFileContent: string): number => {
 	const titleStart = "<title>";
 	return svgFileContent.indexOf(titleStart) + titleStart.length;
 };
@@ -105,7 +105,7 @@ const getTitleTextIndex = (svgFileContent) => {
  * @param {string} string_ The string to shorten.
  * @returns {string} The shortened string.
  */
-const maybeShortenedWithEllipsis = (string_) =>
+const maybeShortenedWithEllipsis = (string_: string): string =>
 	string_.length > 20 ? `${string_.slice(0, 20)}...` : string_;
 
 /**
@@ -113,7 +113,7 @@ const maybeShortenedWithEllipsis = (string_) =>
  * @param {string} string_ The string to check.
  * @returns {boolean} Whether the string is a number.
  */
-const isNumber = (string_) =>
+const isNumber = (string_: string): boolean =>
 	[...string_].every((character) => "0123456789".includes(character));
 
 /**
@@ -126,12 +126,13 @@ const isNumber = (string_) =>
  * }}} Info
  */
 /** @type {import('svglint').Config} */
-const config = {
+
+const config: import('svglint').Config = {
 	fixtures(_, $, ast) {
 		const iconPath = $.find("path").attr("d");
 		const segments = parsePath(iconPath);
 		const pathDIndex = getPathDIndex(ast.source);
-		// @ts-expect-error
+
 		const absSegments = svgpath(iconPath).abs().unshort().segments;
 		const bbox = svgPathBbox(iconPath);
 		return { iconPath, segments, bbox, absSegments, pathDIndex };
@@ -306,11 +307,12 @@ const config = {
 
 						const decimalCodepointCharIndex =
 							getTitleTextIndex(ast.source) + match.index + 1;
+						// biome-ignore lint/suspicious/noImplicitAnyLet: ok
 						let replacement;
 						if (xmlNamedEntitiesCodepoints.includes(decimalNumber)) {
 							replacement = `"&${xmlNamedEntities[
 								xmlNamedEntitiesCodepoints.indexOf(decimalNumber)
-								]
+							]
 								};"`;
 						} else {
 							replacement = String.fromCodePoint(decimalNumber);
@@ -335,7 +337,7 @@ const config = {
 					}
 				}
 			},
-			(reporter, $, ast, /** @type {Info} */ { fixtures: { bbox } }) => {
+			(reporter, $, ast, /** @type {Info} */ { fixtures: { bbox } }: Info) => {
 				reporter.name = "icon-size";
 
 				const [minX, minY, maxX, maxY] = bbox;
@@ -357,7 +359,7 @@ const config = {
 				reporter,
 				$,
 				ast,
-				/** @type {Info} */ { fixtures: { segments, iconPath, pathDIndex } },
+				/** @type {Info} */ { fixtures: { segments, iconPath, pathDIndex } }: Info,
 			) => {
 				reporter.name = "icon-precision";
 
@@ -392,7 +394,7 @@ const config = {
 				ast,
 				/** @type {Info} */ {
 					fixtures: { segments, iconPath, pathDIndex, absSegments },
-				},
+				}: Info,
 			) => {
 				reporter.name = "ineffective-segments";
 
@@ -408,7 +410,7 @@ const config = {
 				const upperHorDirectionCommand = "H";
 				const upperVersionDirectionCommand = "V";
 				/** @type {(string | number | undefined)[]} */
-				const upperDirectionCommands = [
+				const upperDirectionCommands: (string | number | undefined)[] = [
 					upperHorDirectionCommand,
 					upperVersionDirectionCommand,
 				];
@@ -435,7 +437,7 @@ const config = {
 				 * @returns {boolean} Whether the segment is ineffective.
 				 */
 				// eslint-disable-next-line complexity
-				const isInvalidSegment = (segment, index, previousSegmentIsZ) => {
+				const isInvalidSegment = (segment: import('svg-path-segments').Segment, index: number, previousSegmentIsZ: boolean): boolean => {
 					const [command, x1Coord, y1Coord, ...rest] = segment.params;
 					if (commands.has(command)) {
 						// Relative directions (h or v) having a length of 0
@@ -633,7 +635,7 @@ const config = {
 				reporter,
 				$,
 				ast,
-				/** @type {Info} */ { fixtures: { segments, iconPath, pathDIndex } },
+				/** @type {Info} */ { fixtures: { segments, iconPath, pathDIndex } }: Info,
 			) => {
 				reporter.name = "collinear-segments";
 				/**
@@ -642,7 +644,7 @@ const config = {
 				 * @returns {import('svg-path-segments').Segment[]} The collinear segments.
 				 */
 				// eslint-disable-next-line complexity
-				const getCollinearSegments = () => {
+				const getCollinearSegments = (): import('svg-path-segments').Segment[] => {
 					const collinearSegments = [];
 					const straightLineCommands = "HhVvLlMm";
 
@@ -882,7 +884,7 @@ const config = {
 				reporter,
 				$,
 				ast,
-				/** @type {Info} */ { fixtures: { iconPath, pathDIndex } },
+				/** @type {Info} */ { fixtures: { iconPath, pathDIndex } }: Info,
 			) => {
 				reporter.name = "negative-zeros";
 
@@ -903,7 +905,7 @@ const config = {
 					}
 				}
 			},
-			(reporter, $, ast, /** @type {Info} */ { fixtures: { bbox } }) => {
+			(reporter, $, ast, /** @type {Info} */ { fixtures: { bbox } }: Info) => {
 				reporter.name = "icon-centered";
 
 				const [minX, minY, maxX, maxY] = bbox;
@@ -926,7 +928,7 @@ const config = {
 				reporter,
 				$,
 				ast,
-				/** @type {Info} */ { fixtures: { segments, iconPath, pathDIndex } },
+				/** @type {Info} */ { fixtures: { segments, iconPath, pathDIndex } }: Info,
 			) => {
 				reporter.name = "final-closepath";
 
@@ -953,7 +955,7 @@ const config = {
 				reporter,
 				$,
 				ast,
-				/** @type {Info} */ { fixtures: { iconPath, pathDIndex } },
+				/** @type {Info} */ { fixtures: { iconPath, pathDIndex } }: Info,
 			) => {
 				reporter.name = "path-format";
 
@@ -1008,7 +1010,7 @@ const config = {
 				reporter,
 				$,
 				ast,
-				/** @type {Info} */ { fixtures: { iconPath, pathDIndex } },
+				/** @type {Info} */ { fixtures: { iconPath, pathDIndex } }: Info,
 			) => {
 				reporter.name = "simplifiable-numbers";
 

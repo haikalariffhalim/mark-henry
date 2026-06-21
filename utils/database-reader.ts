@@ -1,4 +1,5 @@
 import { TaggedError } from "better-result";
+import { zid }
 
 export class StoreReadError extends TaggedError("StoreReadError")<{
 	message: Id<"DatatypeValidator">;
