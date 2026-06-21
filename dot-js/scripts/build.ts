@@ -8,7 +8,7 @@ const packageJson = (await Bun.file(new URL("../package.json", import.meta.url))
 };
 const runtimeExternals = Object.keys(packageJson.dependencies ?? {});
 
-console.log("🔨 Building bunli CLI...");
+console.log("Building mjJS CLI...");
 
 // Clean dist directory
 await $`rm -rf dist`;
@@ -26,7 +26,7 @@ if (useCompile) {
 		"./src/cli.ts",
 		"--compile",
 		"--outfile",
-		"./dist/bunli",
+		"./dist",
 		"--minify",
 	];
 
@@ -52,14 +52,14 @@ if (useCompile) {
 		process.exit(1);
 	}
 
-	// Make CLI executable
-	const cliContent = await Bun.file("./dist/cli.js").text();
+
+	const jsContent = await Bun.file("main.mjs").text();
 	// Only add shebang if it doesn't already have one
-	const finalContent = cliContent.startsWith("#!")
-		? cliContent
-		: `#!/usr/bin/env bun\n${cliContent}`;
-	await Bun.write("./dist/cli.js", finalContent);
-	await $`chmod +x dist/cli.js`;
+	const finalContent = jsContent.startsWith("#!")
+		? jsContent
+		: `#!/usr/bin/env bun\n${jsContent}`;
+	await Bun.write("./main.mjs", finalContent);
+	await $`chmod +x main.mjs`;
 }
 
 // Build library
