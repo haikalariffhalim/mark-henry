@@ -6,6 +6,7 @@ use svg_to_icons::{
     create_web_targets, svg_to_icon_data,
 };
 
+#[test]
 fn main() -> std::io::Result<()> {
     let mut svg_data = String::new();
     File::open("icon.svg")?.read_to_string(&mut svg_data)?;
